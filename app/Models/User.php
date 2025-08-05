@@ -8,11 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\Contracts\OAuthenticatable;
+use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements OAuthenticatable
 {
-    use HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
@@ -29,6 +30,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'token',
     ];
 
     /**
