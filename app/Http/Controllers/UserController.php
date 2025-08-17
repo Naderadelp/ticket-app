@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TicketResource;
-use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 
-class TicketController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $tickets = Ticket::query()->paginate(10);
-        return TicketResource::collection($tickets);
+        $users = User::paginate(10);
+        return UserResource::collection($users);
     }
 
     /**
@@ -22,7 +22,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -38,8 +38,7 @@ class TicketController extends Controller
      */
     public function show(string $id)
     {
-        $ticket = Ticket::findOrFail($id);
-        return new TicketResource($ticket);
+        //
     }
 
     /**
