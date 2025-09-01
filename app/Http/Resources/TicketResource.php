@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TicketResource extends JsonResource
 {
+    public static $wrap = 'ticket';
     /**
      * Transform the resource into an array.
      *
@@ -16,10 +17,30 @@ class TicketResource extends JsonResource
     {
         return [
             'id'  => $this->id,
-            'user_id' => $this->user_id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'status' => $this->status,
+            'attribute' => [
+                'user_id' => $this->user_id,
+                'title' => $this->title,
+                'description' => $this->when(
+                    $request->routeIs('tickets.show'),
+                    $this->description
+                ),
+                'status' => $this->status,
+            ],
+            'relationship' => [
+                'author' => [
+                    'data' => [
+                        'type' => 'user',
+                        'id'   => $this->user_id,
+                    ],
+                    'links' => [
+                        'self' => route('user.show',['user' => $this->user_id]),
+                    ],
+                    'includes' => [
+                        'user' => UserResource::make($this->whenLoaded('user')),
+                    ]
+                ],
+            ],
+            'links' => route('tickets.show',['ticket' => $this->id]),
         ];
     }
 }

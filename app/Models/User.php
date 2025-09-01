@@ -66,4 +66,9 @@ class User extends Authenticatable implements OAuthenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
+    }
+    
 }

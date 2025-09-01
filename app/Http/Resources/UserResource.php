@@ -15,9 +15,20 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'type' => 'user',
             "id"=> $this->id,
-            "name"=> $this->name,
-            "email"=> $this->email,
+            'attribute' => [
+                "name"=> $this->name,
+                "email"=> $this->email,
+                $this->mergeWhen($request->routeIs('user.*'),[
+                    'emailVerifiedAt'  => $this->email_verified_at,
+                    'createdAt' => $this->created_at,
+                    'updatedAt' => $this->updated_at,
+                ])
+                ],
+            'includes' => [
+                'tickets' => TicketResource::collection($this->whenLoaded('tickets')),
+            ]
         ];
     }
 }

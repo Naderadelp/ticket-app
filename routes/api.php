@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\TicketController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisterController::class,'register']);
@@ -12,4 +12,4 @@ Route::middleware('auth:api')->post('/logout', [RegisterController::class,'logou
 
 Route::middleware('auth:api')->apiResource('/tickets', TicketController::class);
 
-Route::middleware('auth:api')->get('/user');
+Route::middleware('auth:api')->apiResource('/user',UserController::class);

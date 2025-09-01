@@ -6,23 +6,19 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::paginate(10);
+        if($this->include('tickets')){
+            $users = User::with('tickets')->paginate(10);
+        }else{
+            $users = User::paginate(10);
+        }
         return UserResource::collection($users);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        
     }
 
     /**
@@ -38,17 +34,15 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        if($this->include('ticket')){
+            $user = User::query()
+            ->with('tickets')
+            ->findOrFail($id);
+        }else{
+            $user = User::findOrFail($id);
+        }
+        return UserResource::make($user);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */

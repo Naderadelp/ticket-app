@@ -6,14 +6,18 @@ use App\Http\Resources\TicketResource;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 
-class TicketController extends Controller
+class TicketController extends ApiController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $tickets = Ticket::query()->paginate(10);
+        if($this->include('author')){
+            $tickets = Ticket::with('user')->paginate(10);
+        }else{
+            $tickets = Ticket::query()->paginate(10);
+        }
         return TicketResource::collection($tickets);
     }
 
@@ -38,8 +42,12 @@ class TicketController extends Controller
      */
     public function show(string $id)
     {
-        $ticket = Ticket::findOrFail($id);
-        return new TicketResource($ticket);
+        if($this->include('author')){
+            $ticket = Ticket::with('user')->findOrFail($id);
+        }else{
+            $ticket = Ticket::findOrFail($id);
+        }
+        return  TicketResource::make($ticket);
     }
 
     /**
